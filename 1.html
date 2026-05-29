@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高阶益智游戏合集（修复版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a69bd);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; font-size: 2.6rem; margin: 20px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+        .subtitle { text-align: center; margin-bottom: 35px; opacity: 0.8; font-size: 1.05rem; }
+        .game-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .game-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 22px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .game-card:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 8px 25px rgba(0,0,0,0.25); background: rgba(255,255,255,0.25); }
+        .game-icon { font-size: 2.4rem; margin-bottom: 10px; }
+        .game-name { font-size: 1rem; font-weight: 500; }
+        .game-desc { font-size: 0.8rem; opacity: 0.7; margin-top: 4px; }
+        .game-panel {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            min-height: 580px;
+            display: none;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .game-panel.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .back-btn { padding: 9px 22px; background: #e55039; color: #fff; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-bottom: 25px; transition: 0.2s; }
+        .back-btn:hover { opacity: 0.9; }
+        .game-content { text-align: center; }
+        .game-content h2 { font-size: 2rem; margin-bottom: 18px; color: #ffd32a; }
+        .rule { font-size: 1rem; margin-bottom: 20px; line-height: 1.6; opacity: 0.9; }
+        .btn { padding: 11px 24px; margin: 7px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+        .btn:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .btn-blue { background: #3867d6; color: #fff; }
+        .btn-green { background: #20bf6b; color: #fff; }
+        .btn-yellow { background: #f7d794; color: #222; }
+        .btn-red { background: #eb4d4b; color: #fff; }
+        .big-text { font-size: 4rem; font-weight: bold; margin: 25px 0; }
+        .tip-text { font-size: 1.1rem; margin: 15px 0; min-height: 30px; }
+        .success { color: #20bf6b; }
+        .fail { color: #eb4d4b; }
+        .normal { color: #f7d794; }
+        .card-wrap { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 25px 0; }
+        .card { width: 68px; height: 68px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #333; cursor: pointer; }
+        .card-back { background: #485460; color: transparent; }
+        .input { padding: 12px 16px; font-size: 1rem; border-radius: 8px; border: none; width: 210px; margin: 12px 0; outline: none; }
+        .color-box { width: 150px; height: 150px; border-radius: 14px; margin: 20px auto; box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 高阶益智游戏合集（修复版）</h1>
+        <p class="subtitle">20款解谜 / 对战 / 记忆 / 策略休闲游戏</p>
+
+        <div class="game-list" id="gameList">
+            <div class="game-card" data-id="1"><div class="game-icon">🎯</div><div class="game-name">进阶猜数字</div><div class="game-desc">推理范围猜答案</div></div>
+            <div class="game-card" data-id="2"><div class="game-icon">🧠</div><div class="game-name">记忆翻牌</div><div class="game-desc">记住位置完成配对</div></div>
+            <div class="game-card" data-id="3"><div class="game-icon">⚔️</div><div class="game-name">石头剪刀布PK</div><div class="game-desc">五局三胜对战</div></div>
+            <div class="game-card" data-id="4"><div class="game-icon">⚡</div><div class="game-name">反应速度测试</div><div class="game-desc">检测你的瞬时反应</div></div>
+            <div class="game-card" data-id="5"><div class="game-icon">🎲</div><div class="game-name">骰子竞猜</div><div class="game-desc">猜点数大小</div></div>
+            <div class="game-card" data-id="6"><div class="game-icon">🎰</div><div class="game-name">水果老虎机</div><div class="game-desc">三图相同即可中奖</div></div>
+            <div class="game-card" data-id="7"><div class="game-icon">🔤</div><div class="game-name">词语接龙</div><div class="game-desc">首尾文字相接闯关</div></div>
+            <div class="game-card" data-id="8"><div class="game-icon">🎨</div><div class="game-name">色彩辨识</div><div class="game-desc">识别对应颜色</div></div>
+            <div class="game-card" data-id="9"><div class="game-icon">🗝️</div><div class="game-name">密码破解</div><div class="game-desc">尝试解锁四位密码</div></div>
+            <div class="game-card" data-id="10"><div class="game-icon">😃</div><div class="game-name">表情记忆</div><div class="game-desc">记忆表情顺序</div></div>
+            <div class="game-card" data-id="11"><div class="game-icon">✍️</div><div class="game-name">文字默写</div><div class="game-desc">记忆短句并复刻</div></div>
+            <div class="game-card" data-id="12"><div class="game-icon">🧮</div><div class="game-name">限时速算</div><div class="game-desc">快速口算答题</div></div>
+            <div class="game-card" data-id="13"><div class="game-icon">🪙</div><div class="game-name">硬币博弈</div><div class="game-desc">竞猜正反面</div></div>
+            <div class="game-card" data-id="14"><div class="game-icon">📊</div><div class="game-name">数字大小挑战</div><div class="game-desc">判断数值大小</div></div>
+            <div class="game-card" data-id="15"><div class="game-icon">🎫</div><div class="game-name">随机抽签</div><div class="game-desc">抽取随机人选</div></div>
+            <div class="game-card" data-id="16"><div class="game-icon">🏃</div><div class="game-name">手速挑战</div><div class="game-desc">限时点击比拼</div></div>
+            <div class="game-card" data-id="17"><div class="game-icon">⏱️</div><div class="game-name">精准计时</div><div class="game-desc">控制时间停止</div></div>
+            <div class="game-card" data-id="18"><div class="game-icon">🏆</div><div class="game-name">综合闯关</div><div class="game-desc">多关卡连续挑战</div></div>
+            <div class="game-card" data-id="19"><div class="game-icon">👥</div><div class="game-name">队伍分组</div><div class="game-desc">随机分配小组</div></div>
+            <div class="game-card" data-id="20"><div class="game-icon">🛡️</div><div class="game-name">攻防对战</div><div class="game-desc">策略选择攻防招式</div></div>
+        </div>
+
+        <div class="game-panel" id="gamePanel">
+            <button class="back-btn" id="backBtn">← 返回列表</button>
+            <div class="game-content" id="gameContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // 所有逻辑都包在 DOMContentLoaded 里，避免作用域问题
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameList = document.getElementById("gameList");
+            const gamePanel = document.getElementById("gamePanel");
+            const gameContent = document.getElementById("gameContent");
+            const backBtn = document.getElementById("backBtn");
+            let timer = null;
+
+            // 返回列表
+            backBtn.addEventListener('click', function() {
+                clearInterval(timer);
+                gamePanel.classList.remove("active");
+                gameList.style.display = "grid";
+            });
+
+            // 点击游戏卡片
+            gameList.addEventListener('click', function(e) {
+                const card = e.target.closest(".game-card");
+                if (!card) return;
+                const gid = card.dataset.id;
+                gameList.style.display = "none";
+                gamePanel.classList.add("active");
+                loadGame(gid);
+            });
+
+            // 加载游戏（全部函数写在内部，全局无依赖）
+            function loadGame(gid) {
+                clearInterval(timer);
+                switch(gid) {
+                    case "1":
+                        let target = Math.floor(Math.random() * 100) + 1;
+                        let guessCnt = 0;
+                        gameContent.innerHTML = `
+                            <h2>进阶猜数字</h2>
+                            <p class="rule">规则：系统随机生成 1~100 数字，根据提示缩小范围猜出答案</p>
+                            <input class="input" id="gInput" placeholder="输入猜测数字">
+                            <button class="btn btn-green" id="guessBtn">提交猜测</button>
+                            <p class="tip-text normal" id="gTip">开始挑战吧</p>
+                            <p>已猜测次数：<span id="gCount">0</span></p>
+                        `;
+                        document.getElementById("guessBtn").addEventListener('click', function() {
+                            const val = parseInt(document.getElementById("gInput").value);
+                            guessCnt++;
+                            document.getElementById("gCount").innerText = guessCnt;
+                            const tip = document.getElementById("gTip");
+                            if(isNaN(val)) {
+                                tip.innerText = "请输入有效数字！";
+                                tip.className = "tip-text fail";
+                                return;
+                            }
+                            if(val > target) {
+                                tip.innerText = "数字偏大，请往小范围猜测";
+                                tip.className = "tip-text normal";
+                            } else if(val < target) {
+                                tip.innerText = "数字偏小，请往大范围猜测";
+                                tip.className = "tip-text normal";
+                            } else {
+                                tip.innerText = `恭喜猜对！总共使用 ${guessCnt} 次机会`;
+                                tip.className = "tip-text success";
+                            }
+                        });
+                        break;
+
+                    case "2":
+                        gameContent.innerHTML = `
+                            <h2>记忆翻牌</h2>
+                            <p class="rule">翻开卡牌，找出两两相同图案</p>
+                            <div class="card-wrap">
+                                <div class="card card-back" data-txt="🐱">?</div>
+                                <div class="card card-back" data-txt="🐶">?</div>
+                                <div class="card card-back" data-txt="🐱">?</div>
+                                <div class="card card-back" data-txt="🐰">?</div>
+                                <div class="card card-back" data-txt="🐶">?</div>
+                                <div class="card card-back" data-txt="🐰">?</div>
+                            </div>
+                            <p class="tip-text normal" id="cTip">记住图案位置</p>
+                        `;
+                        let firstCard = null;
+                        let firstText = "";
+                        document.querySelectorAll(".card").forEach(card => {
+                            card.addEventListener('click', function() {
+                                const txt = this.dataset.txt;
+                                this.innerText = txt;
+                                this.classList.remove("card-back");
+                                if(!firstCard) {
+                                    firstCard = this;
+                                    firstText = txt;
+                                } else {
+                                    const tip = document.getElementById("cTip");
+                                    if(firstText === txt && firstCard !== this) {
+                                        tip.innerText = "配对成功！";
+                                        tip.className = "tip-text success";
+                                    } else {
+                                        tip.innerText = "配对失败，卡牌复原";
+                                        tip.className = "tip-text fail";
+                                        setTimeout(() => {
+                                            firstCard.innerText = "?";
+                                            this.innerText = "?";
+                                            firstCard.classList.add("card-back");
+                                            this.classList.add("card-back");
+                                        }, 700);
+                                    }
+                                    firstCard = null;
+                                    firstText = "";
+                                }
+                            });
+                        });
+                        break;
+
+                    case "3":
+                        let userWin = 0, pcWin = 0;
+                        gameContent.innerHTML = `
+                            <h2>石头剪刀布PK</h2>
+                            <p class="rule">五局三胜，率先赢得3局即可获胜</p>
+                            <div class="big-text" id="rpsShow">等待出招</div>
+                            <button class="btn btn-red" data-val="0">✊ 石头</button>
+                            <button class="btn btn-yellow" data-val="1">✌️ 剪刀</button>
+                            <button class="btn btn-blue" data-val="2">🖐️ 布</button>
+                            <p class="tip-text normal" id="rpsTip">请选择招式</p>
+                            <p>我方胜场：<span id="uWin">0</span> &nbsp;&nbsp; 电脑胜场：<span id="pWin">0</span></p>
+                        `;
+                        const rpsArr = ["石头","剪刀","布"];
+                        document.querySelectorAll("[data-val]").forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const u = parseInt(this.dataset.val);
+                                const pc = Math.floor(Math.random() * 3);
+                                const show = document.getElementById("rpsShow");
+                                const tip = document.getElementById("rpsTip");
+                                show.innerText = `你：${rpsArr[u]}  VS  电脑：${rpsArr[pc]}`;
+                                if(u === pc) {
+                                    tip.innerText = "本局平局";
+                                    tip.className = "tip-text normal";
+                                } else if((u + 1) % 3 === pc) {
+                                    userWin++;
+                                    document.getElementById("uWin").innerText = userWin;
+                                    tip.innerText = "本局你获胜！";
+                                    tip.className = "tip-text success";
+                                } else {
+                                    pcWin++;
+                                    document.getElementById("pWin").innerText = pcWin;
+                                    tip.innerText = "本局电脑获胜";
+                                    tip.className = "tip-text fail";
+                                }
+                                if(userWin >= 3) {
+                                    tip.innerText = "🎉 恭喜你赢得整场比赛！";
+                                } else if(pcWin >= 3) {
+                                    tip.innerText = "😥 电脑赢得比赛，再接再厉";
+                                }
+                            });
+                        });
+                        break;
+
+                    case "4":
+                        gameContent.innerHTML = `
+                            <h2>反应速度测试</h2>
+                            <p class="rule">色块变绿色后立刻点击，用时越短反应越快</p>
+                            <div class="color-box" id="reactBox" style="background:#555;line-height:150px;color:#fff;">准备</div>
+                            <button class="btn btn-green" id="startReactBtn">开始测试</button>
+                            <p class="tip-text normal" id="reactTip">点击按钮开始</p>
+                        `;
+                        document.getElementById("startReactBtn").addEventListener('click', function() {
+                            const box = document.getElementById("reactBox");
+                            const tip = document.getElementById("reactTip");
+                            box.style.background = "#555";
+                            box.innerText = "等待变色...";
+                            box.onclick = null;
+                            const delay = Math.floor(Math.random() * 3500) + 1500;
+                            setTimeout(() => {
+                                const st = Date.now();
+                                box.style.background = "#20bf6b";
+                                box.innerText = "快点击！";
+                                box.onclick = function() {
+                                    const time = Date.now() - st;
+                                    box.innerText = time + " ms";
+                                    tip.innerText = `你的反应用时：${time} 毫秒`;
+                                    box.onclick = null;
+                                };
+                            }, delay);
+                        });
+                        break;
+
+                    case "5":
+                        gameContent.innerHTML = `
+                            <h2>骰子竞猜</h2>
+                            <p class="rule">猜骰子点数总和偏大还是偏小</p>
+                            <div class="big-text" id="diceShow">🎲 ?</div>
+                            <button class="btn btn-blue" data-type="big">猜偏大</button>
+                            <button class="btn btn-red" data-type="small">猜偏小</button>
+                            <p class="tip-text normal" id="diceTip">做出你的选择</p>
+                        `;
+                        document.querySelectorAll("[data-type]").forEach(btn => {
+                            btn.addEventListener('click', function() {
+                                const type = this.dataset.type;
+                                const num = Math.floor(Math.random() * 11) + 2;
+                                document.getElementById("diceShow").innerText = `🎲 ${num}`;
+                                const tip = document.getElementById("diceTip");
+                                if(type === "big") {
+                                    if(num > 6) {
+                                        tip.innerText = "猜对啦！点数偏大";
+                                        tip.className = "tip-text success";
+                                    } else {
+                                        tip.innerText = "猜错了，点数偏小";
+                                        tip.className = "tip-text fail";
+                                    }
+                                } else {
+                                    if(num < 7) {
+                                        tip.innerText = "猜对啦！点数偏小";
+                                        tip.className = "tip-text success";
+                                    } else {
+                                        tip.innerText = "猜错了，点数偏大";
+                                        tip.className = "tip-text fail";
+                                    }
+                                }
+                            });
+                        });
+                        break;
+
+                    case "6":
+                        gameContent.innerHTML = `
+                            <h2>水果老虎机</h2>
+                            <p class="rule">三个图案完全一致即为大奖</p>
+                            <div class="big-text" id="slotShow">🍎 🍊 🍌</div>
+                            <button class="btn btn-yellow" id="slotRunBtn">开始抽奖</button>
+                            <p class="tip-text normal" id="slotTip">转动试试手气</p>
+                        `;
+                        const fruit = ["🍎","🍊","🍌","🍇","🍓"];
+                        document.getElementById("slotRunBtn").addEventListener('click', function() {
+                            const a = fruit[Math.floor(Math.random()*fruit.length)];
+                            const b = fruit[Math.floor(Math.random()*fruit.length)];
+                            const c = fruit[Math.floor(Math.random()*fruit.length)];
+                            document.getElementById("slotShow").innerText = `${a} ${b} ${c}`;
+                            const tip = document.getElementById("slotTip");
+                            if(a === b && b === c) {
+                                tip.innerText = "🎉 恭喜中大奖！";
+                                tip.className = "tip-text success";
+                            } else if(a===b || b===c || a===c) {
+                                tip.innerText = "小有收获，两个相同";
+                                tip.className = "tip-text normal";
+                            } else {
+                                tip.innerText = "未中奖，再来一次";
+                                tip.className = "tip-text fail";
+                            }
+                        });
+                        break;
+
+                    case "7":
+                        let lastWord = "欢乐";
+                        gameContent.innerHTML = `
+                            <h2>词语接龙</h2>
+                            <p class="rule">用上一个词语最后一字接新词语</p>
+                            <p>当前尾字：<span style="font-size:1.2rem;color:#ffd32a">${lastWord.slice(-1)}</span></p>
+                            <input class="input" id="wordInp" placeholder="输入词语">
+                            <button class="btn btn-green" id="wordLinkBtn">提交接龙</button>
+                            <p class="tip-text normal" id="wordTip">开局词语：${lastWord}</p>
+                        `;
+                        document.getElementById("wordLinkBtn").addEventListener('click', function() {
+                            const w = document.getElementById("wordInp").value.trim();
+                            const tip = document.getElementById("wordTip");
+                            if(w.length < 2) {
+                                tip.innerText = "请输入至少两个字的词语";
+                                tip.className = "tip-text fail";
+                                return;
+                            }
+                            if(w[0] === lastWord.slice(-1)) {
+                                lastWord = w;
+                                tip.innerText = `接龙成功！当前：${w}`;
+                                tip.className = "tip-text success";
+                            } else {
+                                tip.innerText = "首尾字不匹配，重新输入";
+                                tip.className = "tip-text fail";
+                            }
+                        });
+                        break;
+
+                    case "8":
+                        function createColorGame() {
+                            const colorList = [
+                                {n:"红色",c:"#e74c3c"},
+                                {n:"蓝色",c:"#3498db"},
+                                {n:"绿色",c:"#2ecc71"},
+                                {n:"橙色",c:"#f39c12"}
+                            ];
+                            const ran = colorList[Math.floor(Math.random()*colorList.length)];
+                            gameContent.innerHTML = `
+                                <h2>色彩辨识</h2>
+                                <p class="rule">判断下方色块对应的颜色名称</p>
+                                <div class="color-box" style="background:${ran.c}"></div>
+                                <button class="btn btn-red" data-color="红色">红色</button>
+                                <button class="btn btn-blue" data-color="蓝色">蓝色</button>
+                                <button class="btn btn-green" data-color="绿色">绿色</button>
+                                <button class="btn btn-yellow" data-color="橙色">橙色</button>
+                                <p class="tip-text normal" id="colorTip">选择颜色</p>
+                            `;
+                            document.querySelectorAll("[data-color]").forEach(btn => {
+                                btn.addEventListener('click', function() {
+                                    const sel = this.dataset.color;
+                                    const tip = document.getElementById("colorTip");
+                                    if(sel === ran.n) {
+                                        tip.innerText = "判断正确！";
+                                        tip.className = "tip-text success";
+                                    } else {
+                                        tip.innerText = `判断错误，正确为：${ran.n}`;
+                                        tip.className = "tip-text fail";
+                                    }
+                                    setTimeout(createColorGame, 1400);
+                                });
+                            });
+                        }
+                        createColorGame();
+                        break;
+
+                    case "9":
+                        const pwd = String(Math.floor(1000 + Math.random() * 9000));
+                        gameContent.innerHTML = `
+                            <h2>密码破解</h2>
+                            <p class="rule">尝试破解四位数字密码</p>
+                            <input class="input" id="pwdInp" maxlength="4" placeholder="输入4位数字">
+                            <button class="btn btn-green" id="checkPwdBtn">尝试解锁</button>
+                            <p class="tip-text normal" id="pwdTip">开始破解</p>
+                        `;
+                        document.getElementById("checkPwdBtn").addEventListener('click', function() {
+                            const val = document.getElementById("pwdInp").value;
+                            const tip = document.getElementById("pwdTip");
+                            if(val === pwd) {
+                                tip.innerText = "🔓 密码正确，解锁成功！";
+                                tip.className = "tip-text success";
+                            } else {
+                                tip.innerText = "🔒 密码错误，继续尝试";
+                                tip.className = "tip-text fail";
+                            }
+                        });
+                        break;
+
+                    case "10":
+                        gameContent.innerHTML = `
+                            <h2>表情记忆</h2>
+                            <p class="rule">翻开卡牌，匹配相同表情</p>
+                            <div class="card-wrap">
+                                <div class="card card-back" data-emo="😎">?</div>
+                                <div class="card card-back" data-emo="🥳">?</div>
+                                <div class="card card-back" data-emo="😎">?</div>
+                                <div class="card card-back" data-emo="😆">?</div>
+                                <div class="card card-back" data-emo="🥳">?</div>
+                                <div class="card card-back" data-emo="😆">?</div>
+                            </div>
+                            <p class="tip-text normal" id="emoTip">记忆表情位置</p>
+                        `;
+                        let e1 = null, eTxt1 = "";
+                        document.querySelectorAll(".card").forEach(card => {
+                            card.addEventListener('click', function() {
+                                const txt = this.dataset.emo;
+                                this.innerText = txt;
+                                this.classList.remove("card-back");
+                                if(!e1) {
+                                    e1 = this;
+                                    eTxt1 = txt;
+                                } else {
+                                    const tip = document.getElementById("emoTip");
+                                    if(eTxt1 === txt && e1 !== this) {
+                                        tip.innerText = "表情配对成功";
+                                        tip.className = "tip-text success";
+                                    } else {
+                                        tip.innerText = "配对失败，自动复原";
+                                        tip.className = "tip-text fail";
+                                        setTimeout(() => {
+                                            e1.innerText = "?";
+                                            this.innerText = "?";
+                                            e1.classList.add("card-back");
+                                            this.classList.add("card-back");
+                                        },700);
+                                    }
+                                    e1 = null; eTxt1 = "";
+                                }
+                            });
+                        });
+                        break;
+
+                    case "11":
+                        const targetStr = "心怀梦想，勇往直前";
+                        gameContent.innerHTML = `
+                            <h2>文字默写</h2>
+                            <p class="rule">记住下方文字，完整复刻输入</p>
+                            <p style="font-size:1.3rem;margin:15px 0;">${targetStr}</p>
+                            <input class="input" id="textInp" placeholder="在这里输入">
+                            <button class="btn btn-green" id="checkTextBtn">提交核对</button>
+                            <p class="tip-text normal" id="textTip">完整复制上方文字</p>
+                        `;
+                        document.getElementById("checkTextBtn").addEventListener('click', function() {
+                            const user = document.getElementById("textInp").value;
+                            const tip = document.getElementById("textTip");
+                            if(user === targetStr) {
+                                tip.innerText = "文字完全一致，默写成功！";
+                                tip.className = "tip-text success";
+                            } else {
+                                tip.innerText = "文字存在差异，请重新输入";
+                                tip.className = "tip-text fail";
+              
